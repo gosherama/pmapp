@@ -1,10 +1,13 @@
 class TasksController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_task, only: [:show, :edit, :update, :destroy]
 
   # GET /tasks
   # GET /tasks.json
   def index
-    @tasks = current_user.tasks
+    @to_do = current_user.tasks.where(state: 'To_do')
+    @doing = current_user.tasks.where(state: 'Doing')
+    @done = current_user.tasks.where(state: 'Done')
   end
 
   # GET /tasks/1
@@ -69,6 +72,6 @@ class TasksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def task_params
-      params.require(:task).permit(:content)
+      params.require(:task).permit(:content, :state)
     end
 end
